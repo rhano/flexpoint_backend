@@ -3,14 +3,14 @@ const Link =  window.ReactRouterDOM.Link;
 class InfectionModeDropDown extends React.Component {
     render() {
         const initialStatus = this.props.status == null ? Groups.EXPOSED : this.props.status;
-        var optionGeneralPop = initialStatus == Groups.GENERAL_POPULATION ? <option value="o1" selected>General Population</option> : <option value="o1">General Population</option>;
-        var optionExposed = initialStatus == Groups.EXPOSED ? <option value="o2" selected>Potentially Exposed</option> : <option value="o2">Potentially Exposed</option>;
-        var optionInfected = initialStatus == Groups.INFECTED ? <option value="o3" selected>Test Positive</option> : <option value="o3">Test Positive</option>;
-        var optionNeedUrgentHelp = initialStatus == Groups.NEED_URGENT_HELP ? <option value="o4" selected>Need Urgent Help</option> : <option value="o4">Need Urgent Help</option>;
-        var optionRecovered = initialStatus == Groups.RECOVERED ? <option value="o5" selected>Recovered</option> : <option value="o5">Recovered</option>;
+        var optionGeneralPop = initialStatus == Groups.GENERAL_POPULATION ? <option value="o1">General Population</option> : <option value="o1">General Population</option>;
+        var optionExposed = initialStatus == Groups.EXPOSED ? <option value="o2">Potentially Exposed</option> : <option value="o2">Potentially Exposed</option>;
+        var optionInfected = initialStatus == Groups.INFECTED ? <option value="o3">Test Positive</option> : <option value="o3">Test Positive</option>;
+        var optionNeedUrgentHelp = initialStatus == Groups.NEED_URGENT_HELP ? <option value="o4">Need Urgent Help</option> : <option value="o4">Need Urgent Help</option>;
+        var optionRecovered = initialStatus == Groups.RECOVERED ? <option value="o5">Recovered</option> : <option value="o5">Recovered</option>;
         if (this.props.form) {
             return (
-                <select className="form-control">
+                <select className="form-control" >
                     {optionGeneralPop}
                     {optionExposed}
                     {optionInfected}
@@ -93,7 +93,7 @@ class PhoneTracker extends React.Component {
     render() {
         // TODO: Decide if this filter is to be used or not.
         const filteredPhones = this.props.data.filter(phone => phone.status != Groups.GENERAL_POPULATION && phone.status != Groups.RECOVERED);
-        const trackerRows =  filteredPhones.map(phone => <PhoneTrackerRow data={phone} />);
+        const trackerRows =  filteredPhones.map((phone, key) => <PhoneTrackerRow key={key} data={phone} />);
         return (
             <div className="card mt-4 p-2">
                 <h3>App Download Pending</h3>
@@ -155,6 +155,7 @@ class IllnessManagementView extends React.Component {
         return (
             <div className="container">
                 <MedicalHeader userText="Williams, Joe" location="Davidson County, NC" />
+                <h2>Case Notifications:</h2>
                 <ReportNewCaseForm />
                 <PhoneTracker data={this.state.phones} />
             </div>

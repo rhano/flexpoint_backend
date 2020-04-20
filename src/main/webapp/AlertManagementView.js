@@ -1,6 +1,31 @@
 const Link =  window.ReactRouterDOM.Link;
 
 class AlertCreatorForm extends React.Component {
+	state = {
+			fruites: [
+		        {id: 1, value: "General population", isChecked: false},
+		        {id: 2, value: "Potentially Infected", isChecked: false},
+		        {id: 3, value: "Tested Positive", isChecked: false},
+		        {id: 4, value: "Need Urgent Help", isChecked: false},
+		        {id: 5, value: "Recovered", isChecked: false}
+		      ]
+	}
+	
+	handleAllChecked = (event) => {
+	    let fruites = this.state.fruites
+	    fruites.forEach(fruite => fruite.isChecked = event.target.checked) 
+	    this.setState({fruites: fruites})
+	  }
+
+	  handleCheckChieldElement = (event) => {
+	    let fruites = this.state.fruites
+	    fruites.forEach(fruite => {
+	       if (fruite.value === event.target.value)
+	          fruite.isChecked =  event.target.checked
+	    })
+	    this.setState({fruites: fruites})
+	  }
+	  
     render() {
         return (
             <div className="card p-2 mt-4">
@@ -14,31 +39,70 @@ class AlertCreatorForm extends React.Component {
                     <div className="form-group">
                         <label>Groups To Receive</label>
                         <div className="form-check">
-                            <input className="form-check-input" type="checkbox" />
-                            <label className="form-check-label">General population</label>
+	                        <input className="form-check-input" type="checkbox" onClick={this.handleAllChecked}  value="checkedall"  />
+	                        <label className="form-check-label">Select All</label>
                         </div>
-                        <div className="form-check">
-                            <input className="form-check-input" type="checkbox" />
-                            <label className="form-check-label">Potentially Infected</label>
-                        </div>
-                        <div className="form-check">
-                            <input className="form-check-input" type="checkbox" />
-                            <label className="form-check-label">Tested Positive</label>
-                        </div>
-                        <div className="form-check">
-                            <input className="form-check-input" type="checkbox" />
-                            <label className="form-check-label">Need Urgent Help</label>
-                        </div>
-                        <div className="form-check">
-                            <input className="form-check-input" type="checkbox" />
-                            <label className="form-check-label">Recovered</label>
-                        </div>
+                        
+                        {
+                            this.state.fruites.map((fruite, key) => {
+                              return (
+                            		  <div key={key} className="form-check">
+	                            		  <input className="form-check-input" key={fruite.id} onClick={this.handleCheckChieldElement} type="checkbox" checked={fruite.isChecked} value={fruite.value} readOnly/> 
+	                            		  <label className="form-check-label">{fruite.value}</label>
+                            		  </div>
+                            	    )
+                            })
+                          }
+                        
+                        
                     </div>
+                    
+                    <div className="form-group">
+                    <label>Publish Options</label>
+                    <div className="form-check">
+                        <input className="form-check-input" type="radio"  name="publish"/>
+                        <label className="form-check-label">Repeat</label>
+                    </div>
+                    <div className="form-check">
+                        <input className="form-check-input" type="radio"   name="publish"/>
+                        <label className="form-check-label">No Repeat</label>
+                    </div>
+                    <div className="form-check">
+                        <input className="form-check-input" type="radio"  name="publish"/>
+                        <label className="form-check-label">One Time</label>
+                    </div>
+                    <div className="form-check">
+                        <input className="form-check-input" type="radio"  name="publish"/>
+                        <label className="form-check-label">Weekly</label>
+                    </div>
+                    <div className="form-check">
+                        <input className="form-check-input" type="radio"  name="publish"/>
+                        <label className="form-check-label">Daily</label>
+                    </div>
+                    <div className="form-check">
+                        <input className="form-check-input" type="radio"  name="publish"/>
+                        <label className="form-check-label">Monthly</label>
+                    </div>
+                    <div className="form-check">
+	                    <input className="form-check-input" type="radio"  name="publish"/>
+	                    <label className="form-check-label">Number Of Times</label>
+	                </div>
+		             <div className="form-check">
+		                <input className="form-check-input" type="radio"  name="publish"/>
+		                <label className="form-check-label">Start Date</label>
+		            </div>
+		            <div className="form-check">
+			            <input className="form-check-input" type="radio"  name="publish"/>
+			            <label className="form-check-label">End Date</label>
+		            </div>
+                </div>
                     <div className="form-group">
                         <label>Alert Text</label>
                         <textarea type="text" className="form-control"></textarea>
                     </div>
                     <a href="#" className="btn btn-primary" role="button">Create Alert</a>
+                    
+                    <a href="#" className="btn btn-success ml-3" role="button">Publish Alert</a>
                 </div>
             </div>
         );
@@ -47,18 +111,29 @@ class AlertCreatorForm extends React.Component {
 
 class AlertViewingRow extends React.Component {
     render() {
+    	console.log(this.props.data)
         const lastRun = this.props.data.lastRun;
         const lastRunString = lastRun == null ? "Never" : `${lastRun.getMonth() + 1}-${lastRun.getDate()}-${lastRun.getYear()+1900}`;
         return (
             <tr>
                 <td>{this.props.data.name}</td>
                 <td>{lastRunString}</td>
+                <td>{lastRunString}</td>
                 <td>
                     <a href="#" className="mr-3">Edit</a>
                     <a href="#">Delete</a>
                 </td>
-                <td className="text-right">
-                    <Link to="/medical/reviewalert" className="btn btn-success" role="button">Send alerts</Link>
+                
+                <td>
+                    {this.props.data.status == 0 &&
+                    	<Link to="/medical/reviewalert" className="btn btn-success" role="button">Publish Alert</Link>
+                    }
+                    {this.props.data.status == 1 &&
+                    	<Link to="#" className="btn btn-success" role="button">Published</Link>
+                    }
+                    {this.props.data.status == 2 &&
+                    	<Link to="#" className="btn text-success" role="button">Archived</Link>
+                    }	
                 </td>
             </tr>
         );
@@ -67,17 +142,18 @@ class AlertViewingRow extends React.Component {
 
 class AlertViewingTable extends React.Component {
     render() {
-        const rows = this.props.notifications.map(notif => <AlertViewingRow data={notif} />);
+        const rows = this.props.notifications.map((notif, key) => <AlertViewingRow key={key} data={notif} />);
         return (
             <div className="card p-2 mt-4">
-                <h3>Alerts</h3>
+                <h3>Alerts Mgmt:</h3>
                 <table className="table table-striped">
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Last Run</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
                             <th>Actions</th>
-                            <th></th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -96,13 +172,22 @@ class AlertManagementView extends React.Component {
                 name: "Alert exposed",
                 groups: [],
                 text: "Yo!",
-                lastRun: null
+                lastRun: null,
+                status: 0,
             },
             {
                 name: "Alert infected about safety precautions",
                 groups: [],
                 text: "Yo!",
-                lastRun: null
+                lastRun: null,
+                status: 1,
+            },
+            {
+                name: "Alert archived",
+                groups: [],
+                text: "Yo!",
+                lastRun: null,
+                status: 2,
             }
         ]
     }
@@ -111,6 +196,7 @@ class AlertManagementView extends React.Component {
         return (
             <div className="container">
                 <MedicalHeader userText="Williams, Joe" location="Davidson County, NC" />
+                <h2>Alert Notifications:</h2>
                 <AlertCreatorForm />
                 <AlertViewingTable notifications={this.state.notifications} />
             </div>

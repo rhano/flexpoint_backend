@@ -8,6 +8,7 @@ const Redirect = window.ReactRouterDOM.Redirect;
 const App = props => (
     <ReactRouterDOM.HashRouter>
         <Route path="/" exact component={LoginView} />
+        <Route path="/nimda" component={LoginView} />
         <Route path="/medical/illnessmanagement" component={IllnessManagementView} />
         <Route path="/medical/alertmanagement" component={AlertManagementView} />
         <Route path="/medical/reviewalert" component={ReviewAlertView} />

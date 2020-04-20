@@ -50,8 +50,8 @@ class CaseGraph extends React.Component {
 function CaseCounter(props) {
     var days = Array.from(Array(20).keys()).map(day => `Mar-${day+1}`);
     var counts = Array.from(Array(20).keys()).map(day => Math.floor(209*Math.pow(1.2, day)));
-    var rows = Array.from(Array(20).keys()).map(day => {
-        return <tr>
+    var rows = Array.from(Array(20).keys()).map((day, key) => {
+        return <tr key={key}>
             <td>{days[day]}</td>
             <td>{counts[day]}</td>
             <td>{Math.floor(counts[day]*1.5)}</td>
@@ -143,7 +143,8 @@ function AnalyticsView(props) {
     return (
         <div className="container">
             <MedicalHeader userText="Williams, Joe" location="Davidson County, NC" />
-            <div className="row">
+            	<h2>Analytics: </h2>
+            <div className="row mt-4">
                 <div className="col">
                     <Projections /> 
                 </div>

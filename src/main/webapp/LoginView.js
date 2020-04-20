@@ -3,7 +3,23 @@ class LoginView extends React.Component {
         showError: false,
         errorMessage: '',
         usernameText: '',
-        passwordText: ''
+        passwordText: '',
+        healthBtn: false,
+        flexPointBtn: false
+    }
+    
+    componentWillMount(){
+    	if(this.props && this.props.history.location.pathname == '/'){
+    		this.setState({
+    			healthBtn: true,
+    			flexPointBtn: false
+    		})
+    	}else{
+    		this.setState({
+    			healthBtn: false,
+    			flexPointBtn: true
+    		})
+    	}
     }
 
     onUsernameChange = (e) => {
@@ -64,20 +80,25 @@ class LoginView extends React.Component {
             <div className="d-flex h-100 w-100 justify-content-center align-items-center">
                 <div className="rounded">
                     {errorMessage}
-                    <form className="form">
-                        <h3>Login</h3>
-                        <div className="mt-3">
+                    <form className="card p-4">
+                        <h3 className="text-center">Login</h3>
+                        <div className="row mt-3">
                             <label className="mr-3">Username</label>
-                            <input type="text" name="username" onChange={this.onUsernameChange} />
+                            <input type="text" name="username" className="form-group" onChange={this.onUsernameChange} />
                         </div>
-                        <div className="mb-3">
+                        <div className="row mt-3">
                             <label className="mr-3">Password</label>
-                            <input type="password" name="password" onChange={this.onPasswordChange} />
+                            <input type="password" name="password" className="form-group"  onChange={this.onPasswordChange} />
                         </div>
-                        <div>
+                        <div className="mt-3 col-12">
+                        	
+                          {this.state.healthBtn &&
+                        	 <Link to="/admin/pathogensettings" className="btn btn-primary mr-3">Login as Health Department</Link>
+                          }
+                          {this.state.flexPointBtn &&
+                          <Link to="/medical/illnessmanagement" className="btn btn-secondary">Login as FlexPoint Administrator</Link>
+                          }
                             
-                            <Link to="/medical/illnessmanagement" className="btn btn-primary mr-2">Login as Health Department</Link>
-                            <a href="#" onClick={this.onLoginClick} className="btn btn-secondary">Login as FlexPoint Administrator</a>
                         </div>
                     </form>
                 </div>
