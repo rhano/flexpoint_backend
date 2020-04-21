@@ -39,12 +39,59 @@ class LoginView extends React.Component {
             passwordText: text
         });
     }
+    
+    onLoginFlexClick = (e) => {
+    	e.preventDefault();
+    	var url = '/medical/illnessmanagement';
+        var self = this;
+        
+        if(this.state.usernameText == '' || this.state.passwordText == ''){
+        	self.setState({
+                ...self.state,
+                errorMessage: "Please enter username and password",
+                showError: true
+            });
+        	return false;
+        }
+        
+        if(this.state.usernameText != 'admin' || this.state.passwordText != 'testing1234'){
+        	self.setState({
+        		...self.state,
+                usernameText: '',
+                passwordText: '',
+                errorMessage: "Invalid username or password",
+                showError: true,
+            });
+        	return false;
+        }
+        this.props.history.push(url);
+    }
 
     onLoginClick = (e) => {
         e.preventDefault();
         var url = '/admin/appheadings';
         var self = this;
-        fetch('api/admin/login', {
+        
+        if(this.state.usernameText == '' || this.state.passwordText == ''){
+        	self.setState({
+                ...self.state,
+                errorMessage: "Please enter username and password",
+                showError: true
+            });
+        	return false;
+        }
+        
+        if(this.state.usernameText != 'admin' || this.state.passwordText != 'testing1234'){
+        	self.setState({
+                usernameText: '',
+                passwordText: '',
+                errorMessage: "Invalid username or password",
+                showError: true,
+            });
+        	return false;
+        }
+        this.props.history.push(url);
+       {/*fetch('api/admin/login', {
             method: "POST",
             body: `username=${encodeURIComponent(this.state.usernameText)}&password=${encodeURIComponent(this.state.passwordText)}`,
             headers: {
@@ -70,6 +117,7 @@ class LoginView extends React.Component {
                 });
             });
         });
+        */}
     }
 
     render() {
@@ -84,19 +132,19 @@ class LoginView extends React.Component {
                         <h3 className="text-center">Login</h3>
                         <div className="row mt-3">
                             <label className="mr-3">Username</label>
-                            <input type="text" name="username" className="form-group" onChange={this.onUsernameChange} />
+                            <input type="text" name="username" className="form-group" value={this.state.usernameText} onChange={this.onUsernameChange} />
                         </div>
                         <div className="row mt-3">
                             <label className="mr-3">Password</label>
-                            <input type="password" name="password" className="form-group"  onChange={this.onPasswordChange} />
+                            <input type="password" name="password" className="form-group"  value={this.state.passwordText}  onChange={this.onPasswordChange} />
                         </div>
                         <div className="mt-3 col-12">
                         	
                           {this.state.healthBtn &&
-                        	 <Link to="/admin/pathogensettings" className="btn btn-primary mr-3">Login as Health Department</Link>
+                        	 <a href="#" onClick={this.onLoginClick} className="btn btn-primary mr-3">Login as Health Department</a>
                           }
                           {this.state.flexPointBtn &&
-                          <Link to="/medical/illnessmanagement" className="btn btn-secondary">Login as FlexPoint Administrator</Link>
+                          <a href="#" onClick={this.onLoginFlexClick} className="btn btn-secondary">Login as FlexPoint Administrator</a>
                           }
                             
                         </div>

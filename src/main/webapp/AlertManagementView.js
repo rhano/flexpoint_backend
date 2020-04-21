@@ -2,13 +2,54 @@ const Link =  window.ReactRouterDOM.Link;
 
 class AlertCreatorForm extends React.Component {
 	state = {
-			fruites: [
-		        {id: 1, value: "General population", isChecked: false},
-		        {id: 2, value: "Potentially Infected", isChecked: false},
-		        {id: 3, value: "Tested Positive", isChecked: false},
-		        {id: 4, value: "Need Urgent Help", isChecked: false},
-		        {id: 5, value: "Recovered", isChecked: false}
-		      ]
+		fruites: [
+	        {id: 1, value: "General population", isChecked: false},
+	        {id: 2, value: "Potentially Infected", isChecked: false},
+	        {id: 3, value: "Tested Positive", isChecked: false},
+	        {id: 4, value: "Need Urgent Help", isChecked: false},
+	        {id: 5, value: "Recovered", isChecked: false}
+	      ],
+	      alertName: '',
+	      alertText: '',
+	      errorMessage: '',
+	      showError: false
+	}
+	
+	handleChange = (e) => {
+		const {name, value} = e.target;
+		this.setState({
+			[name]:value
+		});
+	}
+	
+	submitAlert = (e) => {
+		 e.preventDefault();
+	    var self = this;
+	    
+	    if(this.state.alertName == '' || this.state.alertText == ''){
+	    	self.setState({
+	            ...self.state,
+	            errorMessage: "Please enter alert name and text",
+	            showError: true
+	        });
+	    	return false;
+	    }
+	    
+	    self.setState({
+            ...self.state,
+            errorMessage: "",
+            showError: false,
+            alertName: '',
+  	      	alertText: '',
+        });
+	    
+	    this.props.data({
+            name: this.state.alertName,
+            groups: [],
+            text: "Yo!",
+            lastRun: new Date(),
+            status: 0,
+	    });
 	}
 	
 	handleAllChecked = (event) => {
@@ -17,24 +58,28 @@ class AlertCreatorForm extends React.Component {
 	    this.setState({fruites: fruites})
 	  }
 
-	  handleCheckChieldElement = (event) => {
+	handleCheckChieldElement = (event) => {
 	    let fruites = this.state.fruites
 	    fruites.forEach(fruite => {
 	       if (fruite.value === event.target.value)
 	          fruite.isChecked =  event.target.checked
 	    })
 	    this.setState({fruites: fruites})
-	  }
+	}
 	  
     render() {
+    	 var errorMessage = this.state.showError ? (
+            <div className="alert alert-danger">{this.state.errorMessage}</div>
+        ) : null;
         return (
             <div className="card p-2 mt-4">
+            {errorMessage}
                 <h3>Create New Alert</h3>
                 <div><small>This will not send the alert. For the alert to be sent, please click the send alerts button below.</small></div>
                 <div className="form">
                     <div className="form-group">
                         <label>Alert Name</label>
-                        <input type="text" className="form-control" />
+                        <input type="text" className="form-control" name="alertName" value={this.state.alertName} onChange={this.handleChange} />
                     </div>
                     <div className="form-group">
                         <label>Groups To Receive</label>
@@ -58,11 +103,7 @@ class AlertCreatorForm extends React.Component {
                     </div>
                     
                     <div className="form-group">
-                    <label>Publish Options</label>
-                    <div className="form-check">
-                        <input className="form-check-input" type="radio"  name="publish"/>
-                        <label className="form-check-label">Repeat</label>
-                    </div>
+                    <label>Publish Repeat</label>
                     <div className="form-check">
                         <input className="form-check-input" type="radio"   name="publish"/>
                         <label className="form-check-label">No Repeat</label>
@@ -98,9 +139,9 @@ class AlertCreatorForm extends React.Component {
                 </div>
                     <div className="form-group">
                         <label>Alert Text</label>
-                        <textarea type="text" className="form-control"></textarea>
+                        <textarea type="text" className="form-control" name="alertText" value={this.state.alertText} onChange={this.handleChange} ></textarea>
                     </div>
-                    <a href="#" className="btn btn-primary" role="button">Create Alert</a>
+                    <a href="#" className="btn btn-primary" role="button" onClick={this.submitAlert}>Create Alert</a>
                     
                     <a href="#" className="btn btn-success ml-3" role="button">Publish Alert</a>
                 </div>
@@ -111,7 +152,6 @@ class AlertCreatorForm extends React.Component {
 
 class AlertViewingRow extends React.Component {
     render() {
-    	console.log(this.props.data)
         const lastRun = this.props.data.lastRun;
         const lastRunString = lastRun == null ? "Never" : `${lastRun.getMonth() + 1}-${lastRun.getDate()}-${lastRun.getYear()+1900}`;
         return (
@@ -146,7 +186,7 @@ class AlertViewingTable extends React.Component {
         return (
             <div className="card p-2 mt-4">
                 <h3>Alerts Mgmt:</h3>
-                <table className="table table-striped">
+                	<table className="table table-striped">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -168,7 +208,7 @@ class AlertViewingTable extends React.Component {
 class AlertManagementView extends React.Component {
     state = {
         notifications: [
-            {
+        	{
                 name: "Alert exposed",
                 groups: [],
                 text: "Yo!",
@@ -182,22 +222,21 @@ class AlertManagementView extends React.Component {
                 lastRun: null,
                 status: 1,
             },
-            {
-                name: "Alert archived",
-                groups: [],
-                text: "Yo!",
-                lastRun: null,
-                status: 2,
-            }
         ]
     }
-
+    
+    setAlertData = (val) => {
+    	this.setState({
+    		notifications: this.state.notifications.concat([val])
+    	});
+    }
+    
     render() {
         return (
             <div className="container">
                 <MedicalHeader userText="Williams, Joe" location="Davidson County, NC" />
                 <h2>Alert Notifications:</h2>
-                <AlertCreatorForm />
+                <AlertCreatorForm  data={this.setAlertData}/>
                 <AlertViewingTable notifications={this.state.notifications} />
             </div>
         );
