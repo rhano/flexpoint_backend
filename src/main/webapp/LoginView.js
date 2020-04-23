@@ -54,7 +54,7 @@ class LoginView extends React.Component {
         	return false;
         }
         
-        if(this.state.usernameText != 'admin' || this.state.passwordText != 'testing1234'){
+        if(this.state.usernameText.toUpperCase() != 'admin'.toUpperCase() || this.state.passwordText.toUpperCase() != 'testing1234'.toUpperCase()){
         	self.setState({
         		...self.state,
                 usernameText: '',
@@ -81,7 +81,7 @@ class LoginView extends React.Component {
         	return false;
         }
         
-        if(this.state.usernameText != 'admin' || this.state.passwordText != 'testing1234'){
+        if(this.state.usernameText.toUpperCase() != 'admin'.toUpperCase() || this.state.passwordText.toUpperCase() != 'testing1234'.toUpperCase()){
         	self.setState({
                 usernameText: '',
                 passwordText: '',

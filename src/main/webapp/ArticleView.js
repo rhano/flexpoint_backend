@@ -5,13 +5,37 @@ class IndividualArticleEntry extends React.Component {
 
     handleInputChange = (e) => {
         var name = e.target.name;
-        var value = e.target.type == 'checkbox' ? e.target.checked : e.target.value; 
+        var value = e.target.type == 'radio' ? e.target.checked : e.target.value; 
         var updatesPayload = {
             [name]: value
         };
         this.props.updateArticle(updatesPayload);
     }
-
+    handleInputCheckboxChange = (e) => {
+    	const allcheckboxes=e.target.checked;
+    	var checkboxs=document.getElementsByName('disease[]');
+    	if(allcheckboxes)
+    	{
+    		for(var i in checkboxs)
+    		{
+    			if(checkboxs[i].checked==false)
+    			{
+    				checkboxs[i].checked=true;
+    			}
+    		}
+    	}
+    	else
+    	{
+    		for(var i in checkboxs)
+    		{
+    			if(checkboxs[i].checked==true)
+    			{
+    				checkboxs[i].checked=false;
+    			}
+    		}
+    	}
+    }
+   
     deleteArticle = (e) => {
         e.preventDefault();
         this.props.deleteArticle(this.props.group, this.props.index);
@@ -22,7 +46,11 @@ class IndividualArticleEntry extends React.Component {
             <form>
                 <div className="mb-4">
                     <div className="d-flex justify-content-between align-items-center">
-                    <h5>Tip #{this.props.index + 1}</h5>
+                    <div className="form-inline">
+                    <h5>Tip #{this.props.index + 1}</h5> &nbsp;&nbsp;
+	                    <label>Display Order on App:  </label>&nbsp;&nbsp;
+	                    <input type="text" className="form-control" size="5" maxlength="3" name="displayOrderOnApp" value={this.props.article.displayOrderOnApp} onChange={this.handleInputChange} />
+                    </div>
                     <a href="#" className="d-block" onClick={this.deleteArticle}>Delete</a>
                     </div>
                     <div className="form-group">
@@ -51,26 +79,28 @@ class IndividualArticleEntry extends React.Component {
                         <textarea className="form-control" name="description" value={this.props.article.description} onChange={this.handleInputChange}></textarea>
                     </div>
                     <div className="form-group">
-                        <label>Applicable States of Disease</label>
+                        <label>Applicable States of Disease</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="checkbox" className="form-check-input"  value="All"  onChange={this.handleInputCheckboxChange} />
+                        <label className="form-check-label">Select All</label>                        
                         <div>
                             <div className="form-check form-check-inline">
-                                <input type="radio" className="form-check-input" name="modeId" value="1" checked={this.props.article.modeId=="1"} onChange={this.handleInputChange} />
+                                <input type="checkbox" name="disease[]" className="form-check-input"  value="1" />
                                 <label className="form-check-label">General Population</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input type="radio" className="form-check-input" name="modeId" value="2" checked={this.props.article.modeId=="2"} onChange={this.handleInputChange}  />
+                                <input type="checkbox"  name="disease[]"  className="form-check-input"   value="2"   />
                                 <label className="form-check-label">Exposed</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input type="radio" className="form-check-input" name="modeId" value="3" checked={this.props.article.modeId=="3"} onChange={this.handleInputChange}  />
+                                <input type="checkbox"  name="disease[]"  className="form-check-input"  value="3"   />
                                 <label className="form-check-label">Infected</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input type="radio" className="form-check-input" name="modeId" value="4" checked={this.props.article.modeId=="4"} onChange={this.handleInputChange}  />
+                                <input type="checkbox"  name="disease[]"  className="form-check-input"  value="4"  />
                                 <label className="form-check-label">Need Urgent Help</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input type="radio" className="form-check-input"  name="modeId" value="5" checked={this.props.article.modeId=="5"} onChange={this.handleInputChange}  />
+                                <input type="checkbox"  name="disease[]"  className="form-check-input"   value="5"   />
                                 <label className="form-check-label">Recovered</label>
                             </div>
                         </div>
@@ -88,13 +118,36 @@ class IndividualUpdateEntry extends React.Component {
 
     handleInputChange = (e) => {
         var name = e.target.name;
-        var value = e.target.type == 'checkbox' ? e.target.checked : e.target.value; 
+        var value = e.target.type == 'radio' ? e.target.checked : e.target.value; 
         var updatesPayload = {
             [name]: value
         };
         this.props.updateInput(updatesPayload);
     }
-
+    handleInputCheckboxChangeNext = (e) => {
+    	const allcheckboxes1=e.target.checked;
+    	var checkboxs1=document.getElementsByName('disease1[]');
+    	if(allcheckboxes1)
+    	{
+    		for(var i in checkboxs1)
+    		{
+    			if(checkboxs1[i].checked==false)
+    			{
+    				checkboxs1[i].checked=true;
+    			}
+    		}
+    	}
+    	else
+    	{
+    		for(var i in checkboxs1)
+    		{
+    			if(checkboxs1[i].checked==true)
+    			{
+    				checkboxs1[i].checked=false;
+    			}
+    		}
+    	}
+    }
     deleteInput = (e) => {
         e.preventDefault();
         this.props.deleteInput(this.props.group, this.props.index);
@@ -104,7 +157,11 @@ class IndividualUpdateEntry extends React.Component {
         return (
             <form>
                 <div className="d-flex justify-content-between align-items-center">
-                    <h5>Update #{this.props.index + 1}</h5>
+                  <div className="form-inline">
+                    <h5>Update #{this.props.index + 1}</h5> &nbsp;&nbsp;
+	                    <label>Display Order on App:  </label>&nbsp;&nbsp;
+	                    <input type="text" className="form-control" size="5" maxlength="3" name="displayOrderOnApp" value={this.props.input.displayOrderOnApp} onChange={this.handleInputChange} />
+                    </div>
                     <a href="#" onClick={this.deleteInput} className="d-block">Delete</a>
                 </div>
                 <div className="form-group">
@@ -133,26 +190,28 @@ class IndividualUpdateEntry extends React.Component {
                     <textarea className="form-control" name="question" onChange={this.handleInputChange} value={this.props.input.question} />
                 </div>
                 <div className="form-group">
-                    <label>Applicable States of Disease</label>
+                    <label>Applicable States of Disease</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="checkbox" className="form-check-input"  value="All"  onChange={this.handleInputCheckboxChangeNext} />
+                    <label className="form-check-label">Select All</label>
                     <div>
                         <div className="form-check form-check-inline">
-                            <input type="radio" className="form-check-input" name="modeId" value="1" checked={this.props.input.modeId=="1"} onChange={this.handleInputChange} />
+                            <input type="checkbox"  name="disease1[]"  className="form-check-input"  value="1"  />
                             <label className="form-check-label">General Population</label>
                         </div>
                         <div className="form-check form-check-inline">
-                            <input type="radio" className="form-check-input" name="modeId" value="2" checked={this.props.input.modeId=="2"} onChange={this.handleInputChange}  />
+                            <input type="checkbox" name="disease1[]" className="form-check-input"  value="2"   />
                             <label className="form-check-label">Exposed</label>
                         </div>
                         <div className="form-check form-check-inline">
-                            <input type="radio" className="form-check-input" name="modeId" value="3" checked={this.props.input.modeId=="3"} onChange={this.handleInputChange}  />
+                            <input type="checkbox" name="disease1[]" className="form-check-input"  value="3"   />
                             <label className="form-check-label">Infected</label>
                         </div>
                         <div className="form-check form-check-inline">
-                            <input type="radio" className="form-check-input" name="modeId" value="4" checked={this.props.input.modeId=="4"} onChange={this.handleInputChange}  />
+                            <input type="checkbox" name="disease1[]" className="form-check-input"  value="4"    />
                             <label className="form-check-label">Need Urgent Help</label>
                         </div>
                         <div className="form-check form-check-inline">
-                            <input type="radio" className="form-check-input" name="modeId" value="5" checked={this.props.input.modeId=="5"} onChange={this.handleInputChange}  />
+                            <input type="checkbox" name="disease1[]" className="form-check-input"  value="5"   />
                             <label className="form-check-label">Recovered</label>
                         </div>
                     </div>

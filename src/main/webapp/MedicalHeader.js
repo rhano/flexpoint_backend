@@ -11,8 +11,9 @@ function MedicalHeader(props) {
                 <li><b>Co. Exposed:</b> 3632</li>
                 <li><b>Co. Cases:</b> 1243</li>
                 <li><b>State Cases:</b> 23123</li>
-                <li><b>User:</b> {props.userText} {props.location}</li>
+                <li><b>User:</b> {props.userText} {props.location}</li>                
             </ul>
+            <Link to="/nimda" className="mr-3">logout</Link>
         </div>
     );
 }
