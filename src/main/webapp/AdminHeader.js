@@ -8,7 +8,7 @@ function AdminHeader(props) {
             </div>
             <div>
                 <span>User: {props.userText}</span><br />
-                <Link to="/" className="mr-3">logout</Link>
+                <Link to="/nimda" className="mr-3">logout</Link>
                 
             </div>
         </div>

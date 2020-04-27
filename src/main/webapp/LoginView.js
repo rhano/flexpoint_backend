@@ -144,7 +144,7 @@ class LoginView extends React.Component {
                         	 <a href="#" onClick={this.onLoginClick} className="btn btn-primary mr-3">Login as Health Department</a>
                           }
                           {this.state.flexPointBtn &&
-                          <a href="#" onClick={this.onLoginFlexClick} className="btn btn-secondary">Login as FlexPoint Administrator</a>
+                          <a href="#" onClick={this.onLoginClick} className="btn btn-secondary">Login as FlexPoint Administrator</a>
                           }
                             
                         </div>
