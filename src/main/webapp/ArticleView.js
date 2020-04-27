@@ -4,16 +4,25 @@ class IndividualArticleEntry extends React.Component {
     }
 
     handleInputChange = (e) => {
+    	
         var name = e.target.name;
-        var value = e.target.type == 'radio' ? e.target.checked : e.target.value; 
+     
+        
+        var value = e.target.type == 'radio' ? e.target.value : e.target.value; 
+        // var value = e.target.value;
+        
         var updatesPayload = {
             [name]: value
         };
+        
         this.props.updateArticle(updatesPayload);
     }
+    
     handleInputCheckboxChange = (e) => {
+    	const { index } = this.props;
     	const allcheckboxes=e.target.checked;
-    	var checkboxs=document.getElementsByName('disease[]');
+    	var checkboxs=document.getElementsByName('disease[' + index + '][]');
+    	
     	if(allcheckboxes)
     	{
     		for(var i in checkboxs)
@@ -35,13 +44,14 @@ class IndividualArticleEntry extends React.Component {
     		}
     	}
     }
-   
+    
     deleteArticle = (e) => {
         e.preventDefault();
         this.props.deleteArticle(this.props.group, this.props.index);
     }
 
     render() {
+    	const { index } = this.props;
         return (
             <form>
                 <div className="mb-4">
@@ -72,6 +82,14 @@ class IndividualArticleEntry extends React.Component {
                                 <input type="radio" className="form-check-input" name="source" value="State Health Department" checked={this.props.article.source=="State Health Department"} onChange={this.handleInputChange} />
                                 <label className="form-check-label">State Health Department</label>
                             </div>
+                            <div className="form-check form-check-inline">
+	                            <input type="radio" className="form-check-input" name="source" value="FPA Advisory Group" checked={this.props.article.source=="FPA Advisory Group"} onChange={this.handleInputChange} />
+	                            <label className="form-check-label">FPA Advisory Group</label>
+	                        </div>
+	                        <div className="form-check form-check-inline">
+	                            <input type="radio" className="form-check-input" name="source" value="Manual Value" checked={this.props.article.source=="Manual Value"} onChange={this.handleInputChange} />
+	                            <input type="text" className="form-check-input" name="sourceInputTxt" />
+                            </div>
                         </div>
                     </div>
                     <div className="form-group">
@@ -84,23 +102,23 @@ class IndividualArticleEntry extends React.Component {
                         <label className="form-check-label">Select All</label>                        
                         <div>
                             <div className="form-check form-check-inline">
-                                <input type="checkbox" name="disease[]" className="form-check-input"  value="1" />
+                                <input type="checkbox" name={`disease[${index}][]`} className="form-check-input"  value="1" />
                                 <label className="form-check-label">General Population</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input type="checkbox"  name="disease[]"  className="form-check-input"   value="2"   />
+                                <input type="checkbox"  name={`disease[${index}][]`}  className="form-check-input"   value="2"   />
                                 <label className="form-check-label">Exposed</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input type="checkbox"  name="disease[]"  className="form-check-input"  value="3"   />
+                                <input type="checkbox"  name={`disease[${index}][]`}  className="form-check-input"  value="3"   />
                                 <label className="form-check-label">Infected</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input type="checkbox"  name="disease[]"  className="form-check-input"  value="4"  />
+                                <input type="checkbox"  name={`disease[${index}][]`}  className="form-check-input"  value="4"  />
                                 <label className="form-check-label">Need Urgent Help</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input type="checkbox"  name="disease[]"  className="form-check-input"   value="5"   />
+                                <input type="checkbox"  name={`disease[${index}][]`}  className="form-check-input"   value="5"   />
                                 <label className="form-check-label">Recovered</label>
                             </div>
                         </div>
@@ -118,15 +136,19 @@ class IndividualUpdateEntry extends React.Component {
 
     handleInputChange = (e) => {
         var name = e.target.name;
-        var value = e.target.type == 'radio' ? e.target.checked : e.target.value; 
+        var value = e.target.type == 'checkbox' ? e.target.checked : e.target.value; 
+// value = e.target.value;
         var updatesPayload = {
             [name]: value
         };
+       
         this.props.updateInput(updatesPayload);
     }
+    
     handleInputCheckboxChangeNext = (e) => {
-    	const allcheckboxes1=e.target.checked;
-    	var checkboxs1=document.getElementsByName('disease1[]');
+    	const { index } = this.props;
+    	const allcheckboxes1 = e.target.checked;
+    	var checkboxs1 = document.getElementsByName('disease1[' + index + '][]');
     	if(allcheckboxes1)
     	{
     		for(var i in checkboxs1)
@@ -153,7 +175,18 @@ class IndividualUpdateEntry extends React.Component {
         this.props.deleteInput(this.props.group, this.props.index);
     }
 
+    checkBoxDelete = (e) => {
+// e.preventDefault();
+    	if(e.target.checked) {
+    		
+    		this.props.deleteMultipleArticle(this.props.group, this.props.index);
+    	} else {
+    		this.props.removeDeleteMultipleArticle(this.props.group, this.props.index);
+    	}
+    }
+
     render() {
+    	const { index } = this.props;
         return (
             <form>
                 <div className="d-flex justify-content-between align-items-center">
@@ -162,7 +195,15 @@ class IndividualUpdateEntry extends React.Component {
 	                    <label>Display Order on App:  </label>&nbsp;&nbsp;
 	                    <input type="text" className="form-control" size="5" maxlength="3" name="displayOrderOnApp" value={this.props.input.displayOrderOnApp} onChange={this.handleInputChange} />
                     </div>
-                    <a href="#" onClick={this.deleteInput} className="d-block">Delete</a>
+	                <div>
+	                {/*
+						 * <input type="checkbox" onChange={this.checkBoxDelete}
+						 * name="selectDeleteCheckbox"
+						 * className="form-check-input"
+						 * value="DeleteCheckboxSelect" />
+						 */}   
+	                    <a href="#" onClick={this.deleteInput} className="d-block">Delete</a>
+	                </div>
                 </div>
                 <div className="form-group">
                     <label>Short Description Title</label>
@@ -183,6 +224,14 @@ class IndividualUpdateEntry extends React.Component {
                             <input type="radio" className="form-check-input" name="source" value="State Health Department" checked={this.props.input.source=="State Health Department"} onChange={this.handleInputChange} />
                             <label className="form-check-label">State Health Department</label>
                         </div>
+                        <div className="form-check form-check-inline">
+                        <input type="radio" className="form-check-input" name="source" value="FPA Advisory Group" checked={this.props.input.source=="FPA Advisory Group"} onChange={this.handleInputChange} />
+                        <label className="form-check-label">FPA Advisory Group</label>
+                    </div>
+                    <div className="form-check form-check-inline">
+                        <input type="radio" className="form-check-input" name="source" value="Manual Value" checked={this.props.input.source=="Manual Value"} onChange={this.handleInputChange} />
+                        <input type="text" className="form-check-input" name="sourceInputTxt" />
+                    </div>
                     </div>
                 </div>
                 <div className="form-group">
@@ -195,23 +244,23 @@ class IndividualUpdateEntry extends React.Component {
                     <label className="form-check-label">Select All</label>
                     <div>
                         <div className="form-check form-check-inline">
-                            <input type="checkbox"  name="disease1[]"  className="form-check-input"  value="1"  />
+                            <input type="checkbox"  name={`disease1[${index}][]`}  className="form-check-input"  value="1"  />
                             <label className="form-check-label">General Population</label>
                         </div>
                         <div className="form-check form-check-inline">
-                            <input type="checkbox" name="disease1[]" className="form-check-input"  value="2"   />
+                            <input type="checkbox" name={`disease1[${index}][]`} className="form-check-input"  value="2"   />
                             <label className="form-check-label">Exposed</label>
                         </div>
                         <div className="form-check form-check-inline">
-                            <input type="checkbox" name="disease1[]" className="form-check-input"  value="3"   />
+                            <input type="checkbox" name={`disease1[${index}][]`} className="form-check-input"  value="3"   />
                             <label className="form-check-label">Infected</label>
                         </div>
                         <div className="form-check form-check-inline">
-                            <input type="checkbox" name="disease1[]" className="form-check-input"  value="4"    />
+                            <input type="checkbox" name={`disease1[${index}][]`} className="form-check-input"  value="4"    />
                             <label className="form-check-label">Need Urgent Help</label>
                         </div>
                         <div className="form-check form-check-inline">
-                            <input type="checkbox" name="disease1[]" className="form-check-input"  value="5"   />
+                            <input type="checkbox" name={`disease1[${index}][]`} className="form-check-input"  value="5"   />
                             <label className="form-check-label">Recovered</label>
                         </div>
                     </div>
@@ -302,10 +351,11 @@ class ArticleEditor extends React.Component {
 
     articleUpdater = (index) => {
         return (pairs) => {
-            console.log(`Updating ${index}`);
+          
             this.props.updateArticle(index, pairs, this.props.group);
         }
     }
+    
 
     render() {
         var articleFragments = this.props.articles.map((article, ind) => {
@@ -319,6 +369,7 @@ class ArticleEditor extends React.Component {
                 <div className="text-right">
                     <div onClick={this.saveChanges} className="btn btn-primary mr-2">Save changes</div>
                     <div onClick={this.addArticle} className="btn btn-secondary">Add more</div>
+                    
                 </div>
             </React.Fragment>
         );
@@ -342,17 +393,34 @@ class InputEditor extends React.Component {
         e.preventDefault();
         this.props.saveChanges();
     }
+    
+    deleteAllMultipleArticle = (e) => {
+    	e.preventDefault();
+    	this.props.deleteCheckboxesMultipleArticle();
+    }
 
     render() {
         var inputFragments = this.props.inputs.map((input, ind) => {
-            return (<IndividualUpdateEntry group={this.props.group} deleteInput={this.props.deleteInput} index={ind} input={input} updateInput={this.inputUpdater(ind)} />);
+            return (
+            		<IndividualUpdateEntry 
+            		group={this.props.group} 
+            		deleteInput={this.props.deleteInput}
+            		deleteMultipleArticle={this.props.deleteMultipleArticle}
+            		removeDeleteMultipleArticle={this.props.removeDeleteMultipleArticle}
+            		index={ind} 
+            		input={input} 
+            		updateInput={this.inputUpdater(ind)} />);
         });
         return (
             <React.Fragment>
                 {inputFragments}
                 <div className="text-right">
                     <div onClick={this.saveChanges} className="btn btn-primary mr-2">Save changes</div>
-                    <div onClick={this.addInput} className="btn btn-secondary">Add more</div>
+                    <div onClick={this.addInput} className="btn btn-secondary  mr-2">Add more</div>
+                    {/*
+						 * <div onClick={this.deleteAllMultipleArticle}
+						 * className="btn btn-danger">Deletes</div>
+						 */}
                 </div>
             </React.Fragment>
         );
@@ -365,13 +433,19 @@ const DISEASE_MANAGEMENT_UPDATES = 'Disease Management Updates';
 const EMOTIONAL_MANAGEMENT_UPDATES = 'Emotional Management Updates';
 
 class ArticleView extends React.Component {
-    state = {
+    constructor (props) {
+    	super(props);
+    	this.deleteInput = this.deleteInput.bind(this);
+    }
+    
+	state = {
         page: 'Disease Management Tips',
         group: 'DM',
         articles: [],
         inputs: [],
         deleteArticleQueue: [],
         deleteInputQueue: [],
+        deleteCheckboxesQueue: [],
         messageEnabled: false
     }
 
@@ -417,29 +491,64 @@ class ArticleView extends React.Component {
     }
 
     deleteArticle = (group, index) => {
+    	let _this = this;
+    	const { articles, deleteArticleQueue } = this.state;
         console.log('Deleting article');
-        console.log(index);
-        console.log(group);
-        var idsToDelete = this.state.articles.filter(art => art.group == group).filter((_, ind) => ind == index).map(art => art.id);
-        console.log(idsToDelete);
-        this.setState({
-            ...this.state, 
-            articles: this.state.articles.filter(art => art.group == group).filter((_, ind) => ind != index).concat(this.state.articles.filter(art => art.group != group)),
-            deleteArticleQueue: Array.from(new Set(this.state.deleteArticleQueue.concat(idsToDelete)))
+        bootbox.confirm("Are you sure you want to delete ?", function (result) {
+        	if(result) {
+        		var idsToDelete = articles.filter(art => art.group == group).filter((_, ind) => ind == index).map(art => art.id);
+                console.log(idsToDelete);
+                _this.setState({
+                    ..._this.state, 
+                    articles: articles.filter(art => art.group == group).filter((_, ind) => ind != index).concat(articles.filter(art => art.group != group)),
+                    deleteArticleQueue: Array.from(new Set(deleteArticleQueue.concat(idsToDelete)))
+                });
+        	}
         });
+        return;
     }
-
+    
+    deleteMultipleArticle = (group, index) => {
+    	this.setState({
+			deleteCheckboxesQueue: [...this.state.deleteCheckboxesQueue, index ],
+		});
+    	console.log(this.state.deleteCheckboxesQueue, "<< AddDeleteMultipleArticle");
+    }
+    
+    removeDeleteMultipleArticle = (group, index) => {
+	    const arrayNew = this.state.deleteCheckboxesQueue;
+	    const filteredItems = arrayNew.filter(item => item !== index);
+	    this.setState({deleteCheckboxesQueue: filteredItems});
+        console.log(this.state.deleteCheckboxesQueue, "<< removeDeleteMultipleArticle");
+    }
+    
+    deleteCheckboxesMultipleArticle = (e) => {
+    	const { deleteCheckboxesQueue } = this.state;
+    	let _this = this;
+    	console.log(deleteCheckboxesQueue, " == deleteCheckboxesQueue");
+    	deleteCheckboxesQueue.forEach(function (index, group) {
+    		_this.deleteInput("DM", index.index);
+    	})
+    }
+    
     deleteInput = (group, index) => {
         console.log('Deleting input');
-        console.log(index);
-        console.log(group);
-        var idsToDelete = this.state.inputs.filter(inp => inp.group == group).filter((_, ind) => ind == index).map(inp => inp.id);
-        console.log(idsToDelete);
-        this.setState({
-            ...this.state, 
-            inputs: this.state.inputs.filter(inp => inp.group == group).filter((_, ind) => ind != index).concat(this.state.inputs.filter(inp => inp.group != group)),
-            deleteInputQueue: Array.from(new Set(this.state.deleteInputQueue.concat(idsToDelete)))
+        let _this = this;
+        console.log('Deleting article');
+        bootbox.confirm("Are you sure you want to delete ?", function (result) {
+        	if(result) {
+        		var idsToDelete = _this.state.inputs.filter(inp => inp.group == group).filter((_, ind) => ind == index).map(inp => inp.id);
+                console.log(idsToDelete);
+                _this.setState({
+                    ..._this.state, 
+                    inputs: _this.state.inputs.filter(inp => inp.group == group).filter((_, ind) => ind != index).concat(_this.state.inputs.filter(inp => inp.group != group)),
+                    deleteInputQueue: Array.from(new Set(_this.state.deleteInputQueue.concat(idsToDelete)))
+                });
+        	}
         });
+        return;
+        
+        
     }
 
     inputUpdater = (updateIndex, pairs, group) => {
@@ -723,7 +832,17 @@ class ArticleView extends React.Component {
                         </div>
                         {alert}
                         <h3>{this.state.page}</h3>
-                        <InputEditor deleteInput={this.deleteInput} group={group} updateInput={this.inputUpdater} inputs={this.state.inputs.filter(inp => inp.group == group)} addInput={this.addInput} saveChanges={this.saveChanges} />
+                        <InputEditor 
+                        	deleteMultipleArticle={this.deleteMultipleArticle}
+                        	removeDeleteMultipleArticle={this.removeDeleteMultipleArticle}
+                            deleteCheckboxesMultipleArticle={this.deleteCheckboxesMultipleArticle}
+                        	deleteInput={this.deleteInput} 
+                        	group={group} 
+                        	updateInput={this.inputUpdater} 
+                        	inputs={this.state.inputs.filter(inp => inp.group == group)} 
+                        	addInput={this.addInput} 
+                        	saveChanges={this.saveChanges} 
+                        />
                     </div>
                 </div>
             );
