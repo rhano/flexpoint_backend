@@ -45,7 +45,7 @@ public class DbContext implements AutoCloseable {
     }
 
     public Input createInput(Input input) throws SQLException {
-        try (var stmt = connection.prepareStatement("INSERT INTO Input (mode_id, source, name, agroup, icon_url, question, input_type, threshold_type, alert_call_health_provider, alert_call_state_help, alert_call_suicide_help, seek_emergency_care, above_value, below_value) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+        try (var stmt = connection.prepareStatement("INSERT INTO Input (mode_id, source, name, agroup, icon_url, question, input_type, threshold_type, alert_call_health_provider, alert_call_state_help, alert_call_suicide_help, seek_emergency_care, above_value, below_value,Disease_General_Population_FLAG,Disease_Exposed_FLAG,Disease_Infected_FLAG,Disease_Need_Urgent_Help_FLAG,Disease_Recovered_FLAG) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             stmt.setInt(1, input.modeId);
             stmt.setString(2, input.source);
             stmt.setString(3, input.name);
@@ -60,6 +60,11 @@ public class DbContext implements AutoCloseable {
             stmt.setBoolean(12, input.alertCallEmergencyCare);
             stmt.setInt(13, input.aboveValue);
             stmt.setInt(14, input.belowValue);
+            stmt.setBoolean(15, input.diseaseGeneralPopulationFlag);
+            stmt.setBoolean(16, input.diseaseExposedFlag);
+            stmt.setBoolean(17, input.diseaseInfectedFlag);
+            stmt.setBoolean(18, input.diseaseNeedUrgentHelpFlag);
+            stmt.setBoolean(19, input.diseaseRecoveredFlag);
             stmt.executeUpdate();
             var rs = stmt.getGeneratedKeys();
             if (rs.next()) {
@@ -72,7 +77,7 @@ public class DbContext implements AutoCloseable {
     }
 
     public void updateInput(Input input) throws SQLException {
-        try (var stmt = connection.prepareStatement("UPDATE Input SET mode_id=?, source=?, name=?, agroup=?, icon_url=?, question=?, input_type=?, threshold_type=?, alert_call_health_provider=?, alert_call_state_help=?, alert_call_suicide_help=?, seek_emergency_care=?, above_value=?, below_value=? WHERE id=?")) {
+        try (var stmt = connection.prepareStatement("UPDATE Input SET mode_id=?, source=?, name=?, agroup=?, icon_url=?, question=?, input_type=?, threshold_type=?, alert_call_health_provider=?, alert_call_state_help=?, alert_call_suicide_help=?, seek_emergency_care=?, above_value=?, below_value=?,Disease_General_Population_FLAG=?,Disease_Exposed_FLAG=?,Disease_Infected_FLAG=?,Disease_Need_Urgent_Help_FLAG=?,Disease_Recovered_FLAG=? WHERE id=?")) {
             stmt.setInt(1, input.modeId);
             stmt.setString(2, input.source);
             stmt.setString(3, input.name);
@@ -87,7 +92,13 @@ public class DbContext implements AutoCloseable {
             stmt.setBoolean(12, input.alertCallEmergencyCare);
             stmt.setInt(13, input.aboveValue);
             stmt.setInt(14, input.belowValue);
-            stmt.setInt(15, input.id);
+            stmt.setBoolean(15, input.diseaseGeneralPopulationFlag);
+            stmt.setBoolean(16, input.diseaseExposedFlag);
+            stmt.setBoolean(17, input.diseaseInfectedFlag);
+            stmt.setBoolean(18, input.diseaseNeedUrgentHelpFlag);
+            stmt.setBoolean(19, input.diseaseRecoveredFlag);
+            stmt.setInt(20, input.id);
+           
             stmt.execute();
         }
     }
@@ -101,7 +112,7 @@ public class DbContext implements AutoCloseable {
 
     public List<Input> getInputs() throws SQLException {
         var result = new ArrayList<Input>();
-        try (var stmt = connection.prepareStatement("SELECT mode_id, source, name, agroup, icon_url, question, input_type, threshold_type, alert_call_health_provider, alert_call_state_help, alert_call_suicide_help, seek_emergency_care, above_value, below_value, id FROM Input ORDER BY id ASC")) {
+        try (var stmt = connection.prepareStatement("SELECT mode_id, source, name, agroup, icon_url, question, input_type, threshold_type, alert_call_health_provider, alert_call_state_help, alert_call_suicide_help, seek_emergency_care, above_value, below_value, id, Disease_General_Population_FLAG, Disease_Exposed_FLAG, Disease_Infected_FLAG, Disease_Need_Urgent_Help_FLAG, Disease_Recovered_FLAG FROM Input ORDER BY id ASC")) {
             var rs = stmt.executeQuery();
             while (rs.next()) {
                 var input = new Input();
@@ -120,6 +131,20 @@ public class DbContext implements AutoCloseable {
                 input.aboveValue = rs.getInt(13);
                 input.belowValue = rs.getInt(14);
                 input.id = rs.getInt(15);
+                input.diseaseGeneralPopulationFlag = rs.getBoolean(16);
+                input.diseaseExposedFlag = rs.getBoolean(17);
+                input.diseaseInfectedFlag = rs.getBoolean(18);
+                input.diseaseNeedUrgentHelpFlag = rs.getBoolean(19);
+                input.diseaseRecoveredFlag = rs.getBoolean(20);
+                if(input.diseaseGeneralPopulationFlag && input.diseaseExposedFlag && input.diseaseInfectedFlag
+                	&&	input.diseaseNeedUrgentHelpFlag	&& input.diseaseRecoveredFlag 	)
+                {
+                	input.diseasSelectAll=true;
+                }
+                else
+                {
+                	input.diseasSelectAll=false;
+                }
                 result.add(input);
             }
         }
@@ -127,13 +152,18 @@ public class DbContext implements AutoCloseable {
     }
 
     public Article createArticle(Article article) throws SQLException {
-        try (var stmt = connection.prepareStatement("INSERT INTO Article (name, description, icon_url, mode_id, agroup, source) VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+        try (var stmt = connection.prepareStatement("INSERT INTO Article (name, description, icon_url, mode_id, agroup, source,Disease_General_Population_FLAG,Disease_Exposed_FLAG,Disease_Infected_FLAG,Disease_Need_Urgent_Help_FLAG,Disease_Recovered_FLAG) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, article.name);
             stmt.setString(2, article.description);
             stmt.setString(3, article.iconUrl);
             stmt.setInt(4, article.modeId);
             stmt.setString(5, article.group);
             stmt.setString(6, article.source);
+            stmt.setBoolean(7, article.diseaseGeneralPopulationFlag);
+            stmt.setBoolean(8, article.diseaseExposedFlag);
+            stmt.setBoolean(9, article.diseaseInfectedFlag);
+            stmt.setBoolean(10, article.diseaseNeedUrgentHelpFlag);
+            stmt.setBoolean(11, article.diseaseRecoveredFlag);
             stmt.executeUpdate();
             var rs = stmt.getGeneratedKeys();
             if (rs.next()) {
@@ -147,7 +177,7 @@ public class DbContext implements AutoCloseable {
 
     public List<Article> getArticles() throws SQLException {
         var result = new ArrayList<Article>();
-        try (var stmt = connection.prepareStatement("SELECT id, name, description, icon_url, mode_id, agroup, source FROM Article ORDER BY id ASC")) {
+        try (var stmt = connection.prepareStatement("SELECT id, name, description, icon_url, mode_id, agroup, source,Disease_General_Population_FLAG,Disease_Exposed_FLAG,Disease_Infected_FLAG,Disease_Need_Urgent_Help_FLAG,Disease_Recovered_FLAG FROM Article ORDER BY id ASC")) {
             var rs = stmt.executeQuery();
             while (rs.next()) {
                 var article = new Article();
@@ -158,6 +188,20 @@ public class DbContext implements AutoCloseable {
                 article.modeId = rs.getInt(5);
                 article.group = rs.getString(6);
                 article.source = rs.getString(7);
+                article.diseaseGeneralPopulationFlag = rs.getBoolean(8);
+                article.diseaseExposedFlag = rs.getBoolean(9);
+                article.diseaseInfectedFlag = rs.getBoolean(10);
+                article.diseaseNeedUrgentHelpFlag = rs.getBoolean(11);
+                article.diseaseRecoveredFlag = rs.getBoolean(12);
+                if(article.diseaseGeneralPopulationFlag && article.diseaseExposedFlag && article.diseaseInfectedFlag
+                    	&&	article.diseaseNeedUrgentHelpFlag	&& article.diseaseRecoveredFlag 	)
+                {
+                	article.diseasSelectAll=true;
+                }
+                else
+                {
+                	article.diseasSelectAll=false;
+                }
                 result.add(article);
             }
         }
@@ -165,7 +209,7 @@ public class DbContext implements AutoCloseable {
     }
 
     public Article updateArticle(Article article) throws SQLException {
-        try (var stmt = connection.prepareStatement("UPDATE Article SET name=?, description=?, icon_url=?, mode_id=?, agroup=?, source=? WHERE id=?"))
+        try (var stmt = connection.prepareStatement("UPDATE Article SET name=?, description=?, icon_url=?, mode_id=?, agroup=?, source=?,Disease_General_Population_FLAG=?,Disease_Exposed_FLAG=?,Disease_Infected_FLAG=?,Disease_Need_Urgent_Help_FLAG=?,Disease_Recovered_FLAG=? WHERE id=?"))
         {
             stmt.setString(1, article.name);
             stmt.setString(2, article.description);
@@ -173,7 +217,13 @@ public class DbContext implements AutoCloseable {
             stmt.setInt(4, article.modeId);
             stmt.setString(5, article.group);
             stmt.setString(6, article.source);
-            stmt.setInt(7, article.id);
+            
+            stmt.setBoolean(7, article.diseaseGeneralPopulationFlag);
+            stmt.setBoolean(8, article.diseaseExposedFlag);
+            stmt.setBoolean(9, article.diseaseInfectedFlag);
+            stmt.setBoolean(10, article.diseaseNeedUrgentHelpFlag);
+            stmt.setBoolean(11, article.diseaseRecoveredFlag);
+            stmt.setInt(12, article.id);
             stmt.execute();
             return article;
         }

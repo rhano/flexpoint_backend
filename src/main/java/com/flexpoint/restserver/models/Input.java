@@ -30,4 +30,17 @@ public class Input {
     public int belowValue;
 
     public int aboveValue;
+    
+    public boolean diseaseGeneralPopulationFlag;
+    
+    public boolean diseaseExposedFlag;
+    
+    public boolean diseaseInfectedFlag;
+    
+    public boolean diseaseNeedUrgentHelpFlag;
+    
+    public boolean diseaseRecoveredFlag;
+    
+    public boolean diseasSelectAll;
+
 }

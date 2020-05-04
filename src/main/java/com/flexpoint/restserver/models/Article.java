@@ -14,15 +14,37 @@ public class Article {
     public String group;
 
     public String source;
+    
+    public boolean diseaseGeneralPopulationFlag;
+    
+    public boolean diseaseExposedFlag;
+    
+    public boolean diseaseInfectedFlag;
+    
+    public boolean diseaseNeedUrgentHelpFlag;
+    
+    public boolean diseaseRecoveredFlag;
+    
+    public boolean diseasSelectAll;
 
-    public static Article create(String name, String description, String iconUrl, int modeId, String group, String source) {
-        var article = new Article();
-        article.name = name;
-        article.iconUrl = iconUrl;
-        article.description = description;
-        article.modeId = modeId;
-        article.group = group;
-        article.source = source;
-        return article;
-    }
+    
+    
+    public static Article create(int id, String name, String description, String iconUrl, int modeId, String group, String source,
+			boolean diseaseGeneralPopulationFlag, boolean diseaseExposedFlag, boolean diseaseInfectedFlag,
+			boolean diseaseNeedUrgentHelpFlag, boolean diseaseRecoveredFlag) {
+    	 var article = new Article();
+		article.id = id;
+		article.name = name;
+		article.description = description;
+		article.iconUrl = iconUrl;
+		article.modeId = modeId;
+		article.group = group;
+		article.source = source;
+		article.diseaseGeneralPopulationFlag = diseaseGeneralPopulationFlag;
+		article.diseaseExposedFlag = diseaseExposedFlag;
+		article.diseaseInfectedFlag = diseaseInfectedFlag;
+		article.diseaseNeedUrgentHelpFlag = diseaseNeedUrgentHelpFlag;
+		article.diseaseRecoveredFlag = diseaseRecoveredFlag;
+		return article;
+	}
 }

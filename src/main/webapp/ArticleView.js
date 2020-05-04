@@ -4,44 +4,50 @@ class IndividualArticleEntry extends React.Component {
     }
 
     handleInputChange = (e) => {
-    	
         var name = e.target.name;
-     
-        
-        var value = e.target.type == 'radio' ? e.target.value : e.target.value; 
+        var value = e.target.type == 'checkbox' ? e.target.checked : e.target.value; 
         // var value = e.target.value;
-        
         var updatesPayload = {
             [name]: value
         };
-        
+        console.log(updatesPayload, " == updatesPayload");
         this.props.updateArticle(updatesPayload);
     }
-    
+
     handleInputCheckboxChange = (e) => {
-    	const { index } = this.props;
+    	console.log("");
     	const allcheckboxes=e.target.checked;
-    	var checkboxs=document.getElementsByName('disease[' + index + '][]');
-    	
+    	var checkboxs1 = document.getElementsByName('diseaseGeneralPopulationFlag');
+    	var checkboxs2 = document.getElementsByName('diseaseExposedFlag');
+    	var checkboxs3 = document.getElementsByName('diseaseInfectedFlag');
+    	var checkboxs4 = document.getElementsByName('diseaseNeedUrgentHelpFlag');
+    	var checkboxs5 = document.getElementsByName('diseaseRecoveredFlag');
+    	const { index } = this.props;
     	if(allcheckboxes)
     	{
-    		for(var i in checkboxs)
-    		{
-    			if(checkboxs[i].checked==false)
-    			{
-    				checkboxs[i].checked=true;
-    			}
-    		}
+    		this.props.article.diseaseGeneralPopulationFlag=true;
+    		this.props.article.diseaseExposedFlag=true;
+    		this.props.article.diseaseInfectedFlag=true;
+    		this.props.article.diseaseNeedUrgentHelpFlag=true;
+    		this.props.article.diseaseRecoveredFlag=true;
+    		checkboxs1[index].checked=true;
+    		checkboxs2[index].checked=true;	
+    		checkboxs3[index].checked=true;	
+    		checkboxs4[index].checked=true;	
+    		checkboxs5[index].checked=true;
     	}
     	else
     	{
-    		for(var i in checkboxs)
-    		{
-    			if(checkboxs[i].checked==true)
-    			{
-    				checkboxs[i].checked=false;
-    			}
-    		}
+    		this.props.article.diseaseGeneralPopulationFlag=false;
+    		this.props.article.diseaseExposedFlag=false;
+    		this.props.article.diseaseInfectedFlag=false;
+    		this.props.article.diseaseNeedUrgentHelpFlag=false;
+    		this.props.article.diseaseRecoveredFlag=false;
+    		checkboxs1[index].checked=false;
+    		checkboxs2[index].checked=false;	
+    		checkboxs3[index].checked=false;	
+    		checkboxs4[index].checked=false;	
+    		checkboxs5[index].checked=false;
     	}
     }
     
@@ -52,6 +58,7 @@ class IndividualArticleEntry extends React.Component {
 
     render() {
     	const { index } = this.props;
+    	console.log(this.props, " << this props");
         return (
             <form>
                 <div className="mb-4">
@@ -102,24 +109,45 @@ class IndividualArticleEntry extends React.Component {
                         <label className="form-check-label">Select All</label>                        
                         <div>
                             <div className="form-check form-check-inline">
-                                <input type="checkbox" name={`disease[${index}][]`} className="form-check-input"  value="1" />
+                                <input type="checkbox" 
+                                	name="diseaseGeneralPopulationFlag" 
+                                	className="form-check-input"
+                                	checked={this.props.article.diseaseGeneralPopulationFlag} 
+                                    onChange={this.handleInputChange}
+                                />
                                 <label className="form-check-label">General Population</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input type="checkbox"  name={`disease[${index}][]`}  className="form-check-input"   value="2"   />
+                                <input type="checkbox" 
+                                	name="diseaseExposedFlag" 
+                                	className="form-check-input" 
+                                	checked={this.props.article.diseaseExposedFlag} 
+                                    onChange={this.handleInputChange} />
                                 <label className="form-check-label">Exposed</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input type="checkbox"  name={`disease[${index}][]`}  className="form-check-input"  value="3"   />
-                                <label className="form-check-label">Infected</label>
+                                	<input type="checkbox" 
+                                    	name="diseaseInfectedFlag" 
+                                    	className="form-check-input" 
+                                    	checked={this.props.article.diseaseInfectedFlag} 
+                                        onChange={this.handleInputChange} />
+                                	<label className="form-check-label">Infected</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input type="checkbox"  name={`disease[${index}][]`}  className="form-check-input"  value="4"  />
-                                <label className="form-check-label">Need Urgent Help</label>
+                            	<input type="checkbox" 
+                                	name="diseaseNeedUrgentHelpFlag" 
+                                	className="form-check-input" 
+                                	checked={this.props.article.diseaseNeedUrgentHelpFlag} 
+                                    onChange={this.handleInputChange} />
+                                	<label className="form-check-label">Need Urgent Help</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input type="checkbox"  name={`disease[${index}][]`}  className="form-check-input"   value="5"   />
-                                <label className="form-check-label">Recovered</label>
+                                	<input type="checkbox" 
+                                    	name="diseaseRecoveredFlag" 
+                                    	className="form-check-input" 
+                                    	checked={this.props.article.diseaseRecoveredFlag} 
+                                        onChange={this.handleInputChange} />
+                                	<label className="form-check-label">Recovered</label>
                             </div>
                         </div>
                     </div>
@@ -146,30 +174,66 @@ class IndividualUpdateEntry extends React.Component {
     }
     
     handleInputCheckboxChangeNext = (e) => {
+    	const allcheckboxes=e.target.checked;
+    	var checkboxs1 = document.getElementsByName('diseaseGeneralPopulationFlag');
+    	var checkboxs2 = document.getElementsByName('diseaseExposedFlag');
+    	var checkboxs3 = document.getElementsByName('diseaseInfectedFlag');
+    	var checkboxs4 = document.getElementsByName('diseaseNeedUrgentHelpFlag');
+    	var checkboxs5 = document.getElementsByName('diseaseRecoveredFlag');
     	const { index } = this.props;
-    	const allcheckboxes1 = e.target.checked;
-    	var checkboxs1 = document.getElementsByName('disease1[' + index + '][]');
-    	if(allcheckboxes1)
+    	if(allcheckboxes)
     	{
-    		for(var i in checkboxs1)
-    		{
-    			if(checkboxs1[i].checked==false)
-    			{
-    				checkboxs1[i].checked=true;
-    			}
-    		}
+    		this.props.input.diseaseGeneralPopulationFlag=true;
+    		this.props.input.diseaseExposedFlag=true;
+    		this.props.input.diseaseInfectedFlag=true;
+    		this.props.input.diseaseNeedUrgentHelpFlag=true;
+    		this.props.input.diseaseRecoveredFlag=true;
+    		checkboxs1[index].checked=true;
+    		checkboxs2[index].checked=true;	
+    		checkboxs3[index].checked=true;	
+    		checkboxs4[index].checked=true;	
+    		checkboxs5[index].checked=true;
     	}
     	else
     	{
-    		for(var i in checkboxs1)
-    		{
-    			if(checkboxs1[i].checked==true)
-    			{
-    				checkboxs1[i].checked=false;
-    			}
-    		}
+    		this.props.input.diseaseGeneralPopulationFlag=false;
+    		this.props.input.diseaseExposedFlag=false;
+    		this.props.input.diseaseInfectedFlag=false;
+    		this.props.input.diseaseNeedUrgentHelpFlag=false;
+    		this.props.input.diseaseRecoveredFlag=false;
+    		checkboxs1[index].checked=false;
+    		checkboxs2[index].checked=false;	
+    		checkboxs3[index].checked=false;	
+    		checkboxs4[index].checked=false;	
+    		checkboxs5[index].checked=false;
     	}
     }
+//    handleInputCheckboxChangeNext = (e) => {
+//    	const { index } = this.props;
+//    	const allcheckboxes1 = e.target.checked;
+//    	var checkboxs1 = document.getElementsByName('disease1[' + index + '][]');
+//    	if(allcheckboxes1)
+//    	{
+//    		for(var i in checkboxs1)
+//    		{
+//    			if(checkboxs1[i].checked==false)
+//    			{
+//    				checkboxs1[i].checked=true;
+//    			}
+//    		}
+//    	}
+//    	else
+//    	{
+//    		for(var i in checkboxs1)
+//    		{
+//    			if(checkboxs1[i].checked==true)
+//    			{
+//    				checkboxs1[i].checked=false;
+//    			}
+//    		}
+//    	}
+//    }
+    
     deleteInput = (e) => {
         e.preventDefault();
         this.props.deleteInput(this.props.group, this.props.index);
@@ -244,24 +308,45 @@ class IndividualUpdateEntry extends React.Component {
                     <label className="form-check-label">Select All</label>
                     <div>
                         <div className="form-check form-check-inline">
-                            <input type="checkbox"  name={`disease1[${index}][]`}  className="form-check-input"  value="1"  />
+                        	<input type="checkbox" 
+	                        	name="diseaseGeneralPopulationFlag" 
+	                        	className="form-check-input" 
+	                        	checked={this.props.input.diseaseGeneralPopulationFlag} 
+	                            onChange={this.handleInputChange} 
+                        	/>
                             <label className="form-check-label">General Population</label>
                         </div>
                         <div className="form-check form-check-inline">
-                            <input type="checkbox" name={`disease1[${index}][]`} className="form-check-input"  value="2"   />
+	                        <input type="checkbox" 
+	                        	name="diseaseExposedFlag" 
+	                        	className="form-check-input" 
+	                        	checked={this.props.input.diseaseExposedFlag} 
+	                            onChange={this.handleInputChange} />
                             <label className="form-check-label">Exposed</label>
                         </div>
                         <div className="form-check form-check-inline">
-                            <input type="checkbox" name={`disease1[${index}][]`} className="form-check-input"  value="3"   />
+	                        <input type="checkbox" 
+	                        	name="diseaseInfectedFlag" 
+	                        	className="form-check-input" 
+	                        	checked={this.props.input.diseaseInfectedFlag} 
+	                            onChange={this.handleInputChange} />
                             <label className="form-check-label">Infected</label>
                         </div>
                         <div className="form-check form-check-inline">
-                            <input type="checkbox" name={`disease1[${index}][]`} className="form-check-input"  value="4"    />
+                        <input type="checkbox" 
+                        	name="diseaseNeedUrgentHelpFlag" 
+                        	className="form-check-input" 
+                        	checked={this.props.input.diseaseNeedUrgentHelpFlag} 
+                            onChange={this.handleInputChange} />
                             <label className="form-check-label">Need Urgent Help</label>
                         </div>
                         <div className="form-check form-check-inline">
-                            <input type="checkbox" name={`disease1[${index}][]`} className="form-check-input"  value="5"   />
-                            <label className="form-check-label">Recovered</label>
+                            	<input type="checkbox" 
+                                	name="diseaseRecoveredFlag" 
+                                	className="form-check-input" 
+                                	checked={this.props.input.diseaseRecoveredFlag} 
+                                    onChange={this.handleInputChange} />
+                            	<label className="form-check-label">Recovered</label> 
                         </div>
                     </div>
                 </div>
@@ -358,9 +443,15 @@ class ArticleEditor extends React.Component {
     
 
     render() {
-        var articleFragments = this.props.articles.map((article, ind) => {
+    	var articleFragments = this.props.articles.map((article, ind) => {
             return (
-                <IndividualArticleEntry group={this.props.group} deleteArticle={this.props.deleteArticle} index={ind} article={article} updateArticle={this.articleUpdater(ind)} /> 
+                <IndividualArticleEntry 
+                	group={this.props.group} 
+                	deleteArticle={this.props.deleteArticle} 
+                	index={ind}
+                	article={article} 
+                	updateArticle={this.articleUpdater(ind)} 
+                /> 
             );
         });
         return (
@@ -613,6 +704,12 @@ class ArticleView extends React.Component {
                 body.append('i_alert_call_state_help', input.alertCallStateHelp ? '1' : '0');
                 body.append('i_alert_call_suicide_help', input.alertCallSuicideHelp ? '1' : '0');
                 body.append('i_alert_call_emergency_care', input.alertCallEmergencyCare ? '1' : '0');
+               
+                body.append('i_Disease_General_Population_FLAG', input.diseaseGeneralPopulationFlag ? '1' : '0');
+                body.append('i_Disease_Exposed_FLAG', input.diseaseExposedFlag ? '1' : '0');
+                body.append('i_Disease_Infected_FLAG', input.diseaseInfectedFlag ? '1' : '0');
+                body.append('i_Disease_Need_Urgent_Help_FLAG', input.diseaseNeedUrgentHelpFlag ? '1' : '0');
+                body.append('i_Disease_Recovered_FLAG', input.diseaseRecoveredFlag ? '1' : '0');
                 fetch(url, {
                     method: 'POST',
                     body: new URLSearchParams(body)
@@ -653,6 +750,8 @@ class ArticleView extends React.Component {
     }
 
     saveArticleChanges = () => {
+    	console.log(this.state.articles, " == this.state.articles");
+//    	debugger;
         var creationPromises = this.state.articles.map(article => {
             var isUpdate = article.id >= 0;
             var url = isUpdate ? 'api/updatearticle' : 'api/createarticle';
@@ -666,6 +765,12 @@ class ArticleView extends React.Component {
                 body.append('a_mode', article.modeId.toString());
                 body.append('a_group', article.group);
                 body.append('a_source', article.source);
+                
+                body.append('a_Disease_General_Population_FLAG', article.diseaseGeneralPopulationFlag? '1' : '0');
+                body.append('a_Disease_Exposed_FLAG', article.diseaseExposedFlag? '1' : '0');
+                body.append('a_Disease_Infected_FLAG', article.diseaseInfectedFlag? '1' : '0');
+                body.append('a_Disease_Need_Urgent_Help_FLAG', article.diseaseNeedUrgentHelpFlag? '1' : '0');
+                body.append('a_Disease_Recovered_FLAG', article.diseaseRecoveredFlag? '1' : '0');
                 fetch(url, {
                     method: 'POST',
                     body: new URLSearchParams(body)
@@ -748,7 +853,12 @@ class ArticleView extends React.Component {
                     iconUrl: '',
                     modeId: 0,
                     source: '',
-                    group: group
+                    group: group,
+                    diseaseGeneralPopulationFlag:false,
+                    diseaseExposedFlag:false,
+                    diseaseInfectedFlag:false,
+                    diseaseNeedUrgentHelpFlag:false,
+                    diseaseRecoveredFlag:false
                 }
             ])
         });
@@ -773,6 +883,11 @@ class ArticleView extends React.Component {
                     alertCallStateHelp: false,
                     alertCallSuicideHelp: false,
                     alertCallEmergencyCare: false,
+                    diseaseGeneralPopulationFlag:false,
+                    diseaseExposedFlag:false,
+                    diseaseInfectedFlag:false,
+                    diseaseNeedUrgentHelpFlag:false,
+                    diseaseRecoveredFlag:false,
                     iconUrl: '',
                     belowValue: 0,
                     aboveValue: 0,

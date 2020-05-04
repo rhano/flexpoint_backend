@@ -31,7 +31,11 @@ public class ApiUpdateInput extends JsonHttpServlet {
         input.alertCallEmergencyCare = isTrue(request, "i_alert_call_emergency_care");
         input.belowValue = Integer.parseInt(request.getParameter("i_below_value"));
         input.aboveValue = Integer.parseInt(request.getParameter("i_above_value"));
-
+        input.diseaseGeneralPopulationFlag=isTrue(request, "i_Disease_General_Population_FLAG");
+        input.diseaseExposedFlag=isTrue(request, "i_Disease_Exposed_FLAG");
+        input.diseaseInfectedFlag=isTrue(request, "i_Disease_Infected_FLAG");
+        input.diseaseNeedUrgentHelpFlag=isTrue(request, "i_Disease_Need_Urgent_Help_FLAG");
+        input.diseaseRecoveredFlag=isTrue(request, "i_Disease_Recovered_FLAG");
         try (var ctx = new DbContext()) {
             ctx.updateInput(input);
             return Map.of("success", true);
